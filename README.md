@@ -12,6 +12,24 @@ Our MVP will have the following features:
 * Deliver content to a txt file
 * At this point in time we expect our algorithm to be optimized for Wikipedia articles
 
+##Document Structure
+* Title
+  * Chapter
+  * Chapter
+  * Chapter
+    * Section
+      * Sub Section
+        * Paragraph
+          * Sentence
+            * Word
+        * Paragraph
+        * Paragraph
+      * Sub Section
+      * Sub Section
+    * Section
+    * Section
+  * Chapter
+
 ##Algorithm
 
 
