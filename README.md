@@ -1,6 +1,18 @@
-ZiegelIt
+ZiegleIt
 ==============
 
+Ever wanted to be able to rip through books like your name was Alex Ziegler? Well, now you can ZiegleIt! With our app you can quickly generate a summary of any article on the web to expedite your learning. When you're short on time, ZiegleIt.
+
+
+##MVP
+Our MVP will have the following features:
+
+* Scrape web URLs and copy content with Nokogiri
+* Take scraped content and generate a summary based on a fixed(?) compression ratio
+* Deliver content to a txt file
+* At this point in time we expect our algorithm to be optimized for Wikipedia articles
+
+##Algorithm
 
 
 
@@ -13,5 +25,5 @@ ZiegelIt
   * 
 
 ##Resources
-* [http://intranet.cis.drexel.edu:8080/faculty/cyang/papers/yang2008h.pdf](Hierarchical Summarization of Large Documents)
-* 
+* [Hierarchical Summarization of Large Documents](http://intranet.cis.drexel.edu:8080/faculty/cyang/papers/yang2008h.pdf)
+* [Nokogiri Gem](http://nokogiri.org/)
