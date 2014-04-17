@@ -30,6 +30,24 @@ Our MVP will have the following features:
     * Section
   * Chapter
 
+##Parsing Rules v1
+1. There are a lot of blank elements (I'm guessing closing tags?) so first and foremost we need a guard clause that prevents nodes with blank ```inner_xml``` from making their way into the content:
+```ruby
+if node.inner_xml != ""
+```
+2. Break when ```See also</span>``` is reached in the current Nokogiri node inner xml. This is checked by matching a ```RegExp```:
+```ruby
+break if node.inner_xml.match(/(See also<\/span>)/)
+```
+3. The current section's text is no longer meaningful if a ```</span>``` tag has been reached. This is checked via ```RegExp``` as well:
+```ruby
+puts "Section: #{node.inner_xml.match(/[ \w]+(?=<\/span>)/)}"
+```
+4. The table of contents is ignored (we are building our own afterall). We achieve this by excluding any node that has an h2 parent with inner xml of ```Contents```. We add it to our guard clause.
+```ruby
+if (node.inner_xml != "") && (node.inner_xml != "Contents")
+```
+
 ##Algorithm
 
 
