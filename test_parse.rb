@@ -1,6 +1,4 @@
-require_relative './modules/parser'
-
-include Parser
+require_relative 'config/application'
 
 test_doc1 = 'test_files/wiki_computer_science.html'
 test_doc2 = 'test_files/wiki_physics.html'

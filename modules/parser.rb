@@ -1,6 +1,5 @@
 require 'nokogiri'
-require_relative '../models/treenode'
-require_relative '../models/tree'
+require_relative '../config/application.rb'
 
 # Module takes a file input and by calling Module.parse with a file
 # input, the module creates node objects based on the content of the
@@ -10,7 +9,7 @@ module Parser
     @file = file
     create_reader
     read_nodes
-    # print_wait
+    print_wait
     # p @nodes.length
     # count_each
     @nodes
@@ -18,11 +17,11 @@ module Parser
 
   private
 
-  def create_reader
+  def self.create_reader
     @reader = Nokogiri::XML::Reader(File.open(@file))
   end
 
-  def read_nodes
+  def self.read_nodes
     @nodes = []
     @reader.each do |node|
 
@@ -35,7 +34,7 @@ module Parser
     end
   end
 
-  def create_node args
+  def self.create_node args
     if args && args[:depth] > 0
       new_node = TreeNode.new(args)
       @nodes.reverse.each do |node|
@@ -46,7 +45,7 @@ module Parser
     end
   end
 
-  def create_args node
+  def self.create_args node
     case
     when node.name =~ /(h).{1}/
       { depth: node.name.delete('h').to_i,
@@ -57,14 +56,14 @@ module Parser
     end
   end
 
-  def print_wait
+  def self.print_wait
     @nodes.each do |node|
       p node
       puts "\n"
     end
   end
 
-  def count_each
+  def self.count_each
     puts "h1: #{@nodes.select { |node| node.depth == 1 }.length}"
     puts "h2: #{@nodes.select { |node| node.depth == 2 }.length}"
     puts "h3: #{@nodes.select { |node| node.depth == 3 }.length}"
