@@ -37,6 +37,10 @@ describe Parser, "arc: parse file and create nodes" do
     @nodes.find_all { |node| node.depth == 5 }.length.should eq(3)
   end
 
+  it "should have seven sentence nodes" do
+    @nodes.find_all { |node| node.depth == 6 }.length.should eq(7)
+  end
+
   #Check nested-ness
   it "should have a title node with 3 children nodes" do
     @nodes.find { |node| node.depth == 1 }.children.length.should eq(3)
