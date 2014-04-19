@@ -91,11 +91,11 @@ describe Parser, "arc: check content of nodes" do
   end
   
   it "should have the correct content in leaf #2" do
-    @nodes.find_all { |node| node.leaf? == true }[1].content.should eq("#{@expected_leaf2}")
+    @nodes.find_all { |node| node.leaf? == true }[1].content.should =~ @expected_leaf2
   end
 
   it "should have the correct content in leaf #7" do
-    @nodes.find_all { |node| node.leaf? == true }[6].content.should eq("#{@expected_leaf7}")
+    @nodes.find_all { |node| node.leaf? == true }[6].content.should =~ @expected_leaf7
   end
 end
 
