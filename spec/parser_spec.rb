@@ -46,12 +46,12 @@ describe Parser, "arc: parse file and create nodes" do
     @nodes.find { |node| node.depth == 1 }.children.length.should eq(3)
   end
 
-  it "should have 3 leaves" do
-    @nodes.find_all { |node| node.leaf? == true }.length.should eq(3)
+  it "should have 7 leaves" do
+    @nodes.find_all { |node| node.leaf? == true }.length.should eq(7)
   end
 
-  it "all leaves should be depth 5" do
-    @nodes.find_all { |node| (node.leaf? == true) && (node.depth == 5) }.length.should eq(3)
+  it "all leaves should be depth 6" do
+    @nodes.find_all { |node| (node.leaf? == true) && (node.depth == 6) }.length.should eq(7)
   end
 end
 
@@ -68,11 +68,11 @@ describe Parser, "arc: check content of nodes" do
     eos
 
     @expected_leaf2 = <<-eos
-    Like relational grammar, arc pair grammar is greatly concerned with grammatical relations (as opposed to the constituent structure focus of other generative theories like versions of Chomskyan transformational grammar). In contrast to the generative-enumerative (proof-theoretic) approach to syntax assumed by transformational grammar, arc pair grammar takes a model-theoretic approach. In arc pair grammar, linguistic laws and language-specific rules of grammar are formalized in the same manner, namely, as logical statements in an axiomatic theory. Further, sentences of a language, understood as structures of a certain type, are the models of the set of linguistic laws and language-specific statements, thereby reducing the notion of grammaticality to the logical notion of model-theoretic satisfaction.
+    Like relational grammar, arc pair grammar is greatly concerned with grammatical relations (as opposed to the constituent structure focus of other generative theories like versions of Chomskyan transformational grammar).
     eos
 
-    @expected_leaf3 = <<-eos
-    For a brief history of early work on relational grammar and arc pair grammar, see Newmeyer, 1980. For a more detailed history of model-theoretic approaches in linguistics, see Pullum and Scholz, 2005 and Pullum, 2007.
+    @expected_leaf7 = <<-eos
+    For a more detailed history of model-theoretic approaches in linguistics, see Pullum and Scholz, 2005 and Pullum, 2007.
     eos
   end
 
@@ -90,8 +90,8 @@ describe Parser, "arc: check content of nodes" do
     @nodes.find_all { |node| node.leaf? ==true }[1].content.should eq("#{@expected_leaf2.strip}")
   end
 
-  it "should have the correct content in leaf #3" do
-    @nodes.find_all { |node| node.leaf? ==true }[2].content.should eq("#{@expected_leaf3.strip}")
+  it "should have the correct content in leaf #7" do
+    @nodes.find_all { |node| node.leaf? ==true }[6].content.should eq("#{@expected_leaf7.strip}")
   end
 end
 
