@@ -100,3 +100,4 @@ describe Parser, "arc: check content of nodes" do
 end
 
 ##note##Create tests: check wiki article with more complex structure ##note##
+

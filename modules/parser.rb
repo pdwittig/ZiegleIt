@@ -85,20 +85,15 @@ module Parser
 
   ##note##After we create the sentences, there isn't much use for the content in each paragraph?##note##
   ##note##Refactor: remove arguments? Or at least one?##note##
+  ##note##Should be split into at least two methods ##note##
   def self.create_and_add_sentence_nodes sentences, node
     word_regex = /[^\w]/
     sentences.map! do |sentence|
       args = {content: sentence.split(word_regex).reject { |word| word == "" }, depth: 6}
       TreeNode.new(args)
     end
-    # sentences.map! { |sentence| sentence.content.split }
+
     sentences.each { |sentence| @nodes << sentence }
     sentences.each { |sentence| node << sentence }
   end
-
-  ##note##Regex: should hyphenated words be broken into individual words?##note##
-  # def self.sentence_content_to_words sentences
-  #   word_regex = /\w+/
-  #   sentences.map! { |sentence| sentence.content = sentence.content.split(word_regex) }
-  # end
 end
