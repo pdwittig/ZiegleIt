@@ -13,15 +13,15 @@ Our MVP will have the following features:
 * At this point in time we expect our algorithm to be optimized for Wikipedia articles
 
 ##Document Structure
-* Title
-  * Chapter
-  * Chapter
-  * Chapter
-    * Section
-      * Sub Section
-        * Paragraph
-          * Sentence
-            * Word
+* Title (depth: 1)
+  * Chapter (2)
+  * Chapter (2)
+  * Chapter (2)
+    * Section (3)
+      * Sub Section (4)
+        * Paragraph (5)
+          * Sentence (6)
+            * Word (6.content)
         * Paragraph
         * Paragraph
       * Sub Section
@@ -53,12 +53,7 @@ if (node.inner_xml != "") && (node.inner_xml != "Contents")
 
 
 ##Next Steps
-* Get some sample Wiki articles
-* Create some model structure to store data of each block
-* Construct hierarchical tree of blocks going down to word level
-* Start calculating shit...
-  * Calculate RBSS of each block
-  * 
+* Start calculating some word scores
 
 ##Resources
 * [Hierarchical Summarization of Large Documents](http://intranet.cis.drexel.edu:8080/faculty/cyang/papers/yang2008h.pdf)

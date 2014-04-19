@@ -10,7 +10,7 @@ describe Parser, "arc: parse file and create nodes" do
     @nodes = Parser.parse test_doc
   end
 
-  ##note##Create test: load the file ##note##
+  ##note##Create test: test file load/parse not relying on node creation ##note##
 
   it "should create node objects" do
     @nodes.should_not be nil

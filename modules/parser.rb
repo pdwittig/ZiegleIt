@@ -59,8 +59,8 @@ module Parser
       { depth: node.name.delete('h').to_i,
         content: "#{node.inner_xml.match(/[ \w]+(?=<\/span>)/)}" }
     when node.name == 'p'
-        { depth: 5,
-          content: (Nokogiri::XML.fragment(node.inner_xml).content) }
+      { depth: 5,
+        content: (Nokogiri::XML.fragment(node.inner_xml).content) }
     end
   end
 
@@ -74,11 +74,11 @@ module Parser
   ##note##How can we pass the node into this block without an argument?##note##
   def self.break_into_sentences node
     sentence_regex = /((?<=[a-z0-9)][.?!])|(?<=[a-z0-9][.?!]"))\s+(?="?[A-Z])/
-    node.content.split(sentence_regex).reject { |sentence| sentence == "" }
+    node.content.split(sentence_regex).reject { |sentence| sentence == '' }
   end
 
   def self.reduce_paragraphs_into_sentences
-    @nodes.find_all { |node| node.depth == 5 }.each do |node|
+    @nodes.select { |node| node.depth == 5 }.each do |node|
       create_and_add_sentence_nodes break_into_sentences(node), node
     end
   end
@@ -89,7 +89,7 @@ module Parser
   def self.create_and_add_sentence_nodes sentences, node
     word_regex = /[^\w]/
     sentences.map! do |sentence|
-      args = {content: sentence.split(word_regex).reject { |word| word == "" }, depth: 6}
+      args = { content: sentence.split(word_regex).reject { |word| word == '' }, depth: 6 }
       TreeNode.new(args)
     end
 
