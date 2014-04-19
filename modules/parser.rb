@@ -1,4 +1,3 @@
-require 'nokogiri'
 require_relative '../config/application.rb'
 
 # Module takes a file input and by calling Module.parse with a file

@@ -1,6 +1,5 @@
 require 'pathname'
-# require 'active_record'
-# require 'logger'
+require 'nokogiri'
 
 require_relative '../models/tree'
 require_relative '../models/treenode'
