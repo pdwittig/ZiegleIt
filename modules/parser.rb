@@ -8,7 +8,7 @@ module Parser
     @file = file
     create_reader
     read_nodes
-    print_wait
+    # print_wait
     # p @nodes.length
     # count_each
     @nodes
