@@ -8,7 +8,6 @@ describe Parser, "arc: parse file and create nodes" do
   before(:all) do
     test_doc = 'spec/wiki_arc_pair_grammar.html'
     @nodes = Parser.parse test_doc
-    p @nodes
   end
 
   ##note##Create test: load the file ##note##
@@ -64,35 +63,39 @@ describe Parser, "arc: check content of nodes" do
     test_doc = 'spec/wiki_arc_pair_grammar.html'
     @nodes = Parser.parse test_doc
 
-    @expected_leaf1 = <<-eos
-    In linguistics, Arc Pair grammar is a syntactic theory developed by David E. Johnson and Paul Postal which is a formalized continuation of relational grammar developed by David M. Perlmutter and Paul M. Postal.
-    eos
+    @expected_leaf1 = ["In", "linguistics", "Arc", "Pair", "grammar", "is", "a", 
+      "syntactic", "theory", "developed", "by", "David", "E", "Johnson", "and", 
+      "Paul", "Postal", "which", "is", "a", "formalized", "continuation", "of", 
+      "relational", "grammar", "developed", "by", "David", "M", "Perlmutter", 
+      "and", "Paul", "M", "Postal"]
 
-    @expected_leaf2 = <<-eos
-    Like relational grammar, arc pair grammar is greatly concerned with grammatical relations (as opposed to the constituent structure focus of other generative theories like versions of Chomskyan transformational grammar).
-    eos
+    @expected_leaf2 = ["Like", "relational", "grammar", "arc", "pair", "grammar",
+     "is", "greatly", "concerned", "with", "grammatical", "relations", "as", 
+     "opposed", "to", "the", "constituent", "structure", "focus", "of", "other", 
+     "generative", "theories", "like", "versions", "of", "Chomskyan", 
+     "transformational", "grammar"]
 
-    @expected_leaf7 = <<-eos
-    For a more detailed history of model-theoretic approaches in linguistics, see Pullum and Scholz, 2005 and Pullum, 2007.
-    eos
+    @expected_leaf7 = ["For", "a", "more", "detailed", "history", "of", "model", 
+      "theoretic", "approaches", "in", "linguistics", "see", "Pullum", "and", 
+      "Scholz", "2005", "and", "Pullum", "2007"]
   end
 
   #Check content of title node
   it "should have the correct content in the title node" do
     @nodes.find { |node| node.depth == 1 }.content.should eq("Arc pair grammar")
-    # If be is used instead of eq, test fails because of === vs ==
   end
 
+  #Check content of leaf nodes (3 of them)
   it "should have the correct content in leaf #1" do
-    @nodes.find_all { |node| node.leaf? ==true }[0].content.should eq("#{@expected_leaf1.strip}")
+    @nodes.find_all { |node| node.leaf? == true }[0].content.should eq("#{@expected_leaf1}")
   end
   
   it "should have the correct content in leaf #2" do
-    @nodes.find_all { |node| node.leaf? ==true }[1].content.should eq("#{@expected_leaf2.strip}")
+    @nodes.find_all { |node| node.leaf? == true }[1].content.should eq("#{@expected_leaf2}")
   end
 
   it "should have the correct content in leaf #7" do
-    @nodes.find_all { |node| node.leaf? ==true }[6].content.should eq("#{@expected_leaf7.strip}")
+    @nodes.find_all { |node| node.leaf? == true }[6].content.should eq("#{@expected_leaf7}")
   end
 end
 

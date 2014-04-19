@@ -71,6 +71,7 @@ module Parser
     end
   end
 
+  ##note##How can we pass the node into this block without an argument?##note##
   def self.break_into_sentences node
     sentence_regex = /((?<=[a-z0-9)][.?!])|(?<=[a-z0-9][.?!]"))\s+(?="?[A-Z])/
     node.content.split(sentence_regex).reject { |sentence| sentence == "" }
@@ -82,9 +83,22 @@ module Parser
     end
   end
 
+  ##note##After we create the sentences, there isn't much use for the content in each paragraph?##note##
+  ##note##Refactor: remove arguments? Or at least one?##note##
   def self.create_and_add_sentence_nodes sentences, node
-    sentences.map! { |sentence| TreeNode.new({content: sentence, depth: 6})}
+    word_regex = /[^\w]/
+    sentences.map! do |sentence|
+      args = {content: sentence.split(word_regex).reject { |word| word == "" }, depth: 6}
+      TreeNode.new(args)
+    end
+    # sentences.map! { |sentence| sentence.content.split }
     sentences.each { |sentence| @nodes << sentence }
     sentences.each { |sentence| node << sentence }
   end
+
+  ##note##Regex: should hyphenated words be broken into individual words?##note##
+  # def self.sentence_content_to_words sentences
+  #   word_regex = /\w+/
+  #   sentences.map! { |sentence| sentence.content = sentence.content.split(word_regex) }
+  # end
 end
