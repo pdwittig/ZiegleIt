@@ -8,6 +8,7 @@ describe Parser, "arc: parse file and create nodes" do
   before(:all) do
     test_doc = 'spec/wiki_arc_pair_grammar.html'
     @nodes = Parser.parse test_doc
+    p @nodes
   end
 
   ##note##Create test: load the file ##note##
