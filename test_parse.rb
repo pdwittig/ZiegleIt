@@ -8,4 +8,4 @@ test_doc4 = 'test_files/wiki_carnivore.html'
 nodes = Parser.parse test_doc3
 
 Parser.count_each
-p Algorithm.get_variable_values "syntactic", nodes
+p Algorithm.get_variable_values "syntactic", nodes, nodes.first

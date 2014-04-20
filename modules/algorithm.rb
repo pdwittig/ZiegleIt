@@ -19,9 +19,10 @@ module Algorithm
     return tfid
   end
 
-  def self.get_variable_values term, range_block
+  def self.get_variable_values term, nodes, range_block
+    @nodes = nodes
     args = {  :N => range_blocks_document,
-              :n => range_blocks_corpus,
+              :n => range_blocks_corpus(term),
               :tl => term.length,
               :tf => term_frequency(term, range_block)}
   end
@@ -30,8 +31,7 @@ module Algorithm
     @nodes.length
   end
 
-  def self.range_blocks_corpus term, nodes
-    @nodes = nodes
+  def self.range_blocks_corpus term
     range_blocks_with_term = 0
     @nodes.each do |range_block|
       range_blocks_with_term += 1 if term_in_range_block? term, range_block
@@ -40,10 +40,7 @@ module Algorithm
   end
 
   def self.term_frequency term, range_block
-    all_words = []
-    all_sentences = range_block.select { |node| node.depth == 6 }
-    all_sentences.each { |sentence| all_words << sentence.content }
-    all_words.flatten!.map(&:downcase).count(term.downcase)
+    all_words_in_range_block(range_block).map(&:downcase).count(term.downcase)
   end
 
   def self.term_in_range_block? term, range_block
