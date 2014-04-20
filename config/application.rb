@@ -3,6 +3,7 @@ require 'nokogiri'
 
 require_relative '../models/tree'
 require_relative '../models/treenode'
+require_relative '../models/summary'
 require_relative '../modules/parser'
 require_relative '../modules/algorithm'
 

@@ -7,6 +7,9 @@ test_doc4 = 'test_files/wiki_carnivore.html'
 
 nodes = Parser.parse test_doc3
 
-Parser.count_each
+# Parser.count_each
 # p Algorithm.calculate_tfid "the", nodes[4], nodes
-p Algorithm.range_block_sentence_score nodes[1], nodes
+p Algorithm.range_block_sentence_score(nodes[1], nodes).round(2)
+
+sum = Summary.new(test_doc3)
+sum.get_document_summary
