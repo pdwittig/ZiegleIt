@@ -9,5 +9,4 @@ nodes = Parser.parse test_doc3
 
 Parser.count_each
 # p Algorithm.calculate_tfid "the", nodes[4], nodes
-# p nodes[4]
-p Algorithm.range_block_sentence_score nodes[4], nodes[1], nodes
+p Algorithm.range_block_sentence_score nodes[1], nodes
