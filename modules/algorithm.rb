@@ -7,46 +7,50 @@ module Algorithm
   # N = number of range blocks in the document (of same depth)
   # n = number of range blocks in document where term occurs (of same depth)
   # tl = term length
+  # fss = fractal sentence score
 
-  def self.range_block_sentence_score nodes
+  def self.range_block_sentence_score sentence, range_block, nodes
     @nodes = nodes
+    @range_block = range_block
+    fss = 0
+    sentence.content.each { |term| fss += calculate_tfid term }
+    return fss
   end
 
-  def self.calculate_tfid term, range_block, nodes
-    @nodes = nodes
-    args = get_variable_values term, range_block
+  def self.calculate_tfid term
+    @term = term
+    args = get_variable_values
     quotient = (args[:N] * args[:tl]).to_f / args[:n]
     args[:tf] * Math.log(quotient, 2)
   end
 
-  def self.get_variable_values term, range_block
-    args = {  :N => range_blocks_in_document(range_block),
-              :n => range_blocks_with_term(term, range_block),
-              :tl => term.length,
-              :tf => term_frequency(term, range_block)}
+  def self.get_variable_values
+    args = {  :N => range_blocks_in_document,
+              :n => range_blocks_with_term,
+              :tl => @term.length,
+              :tf => term_frequency }
   end
 
-  def self.range_blocks_in_document range_block
-    @nodes.count { |node| node.depth == range_block.depth }
+  def self.range_blocks_in_document
+    @nodes.count { |node| node.depth == @range_block.depth }
   end
 
-  def self.range_blocks_with_term term, range_block
-
+  def self.range_blocks_with_term
     range_blocks_with_term = 0
     @nodes.each do |node|
-      if term_in_range_block?(term, node) && node.depth == range_block.depth
+      if term_in_range_block?(node) && node.depth == @range_block.depth
         range_blocks_with_term += 1
       end
     end
     range_blocks_with_term
   end
 
-  def self.term_frequency term, range_block
-    all_words_in_range_block(range_block).map(&:downcase).count(term.downcase)
+  def self.term_frequency
+    all_words_in_range_block(@range_block).map(&:downcase).count(@term.downcase)
   end
 
-  def self.term_in_range_block? term, range_block
-    (all_words_in_range_block range_block).include?(term)
+  def self.term_in_range_block? range_block
+    (all_words_in_range_block range_block).include?(@term)
   end
 
   def self.all_words_in_range_block range_block

@@ -5,7 +5,9 @@ test_doc2 = 'test_files/wiki_physics.html'
 test_doc3 = 'test_files/wiki_arc_pair_grammar.html'
 test_doc4 = 'test_files/wiki_carnivore.html'
 
-nodes = Parser.parse test_doc1
+nodes = Parser.parse test_doc3
 
 Parser.count_each
-p Algorithm.calculate_tfid "the", nodes[4], nodes
+# p Algorithm.calculate_tfid "the", nodes[4], nodes
+# p nodes[4]
+p Algorithm.range_block_sentence_score nodes[4], nodes[1], nodes
