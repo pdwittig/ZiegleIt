@@ -4,8 +4,8 @@ module Algorithm
 
   # tfid = term frequency times inverse document frequency
   # tf = term frequency
-  # N = number of range blocks in the corpus
-  # n = number of range blocks in corpus where term occurs
+  # N = number of range blocks in the document (of same depth)
+  # n = number of range blocks in document where term occurs (of same depth)
   # tl = term length
 
   def self.range_block_sentence_score nodes
@@ -13,28 +13,30 @@ module Algorithm
   end
 
   def self.calculate_tfid term, range_block, nodes
-    args = get_variable_values term, range_block, nodes
-    quotient = (args[:N] * args[:tl]) / args[:n]
-    tfid = args[:tf] * Math.log(quotient, 2)
-    return tfid
+    @nodes = nodes
+    args = get_variable_values term, range_block
+    quotient = (args[:N] * args[:tl]).to_f / args[:n]
+    args[:tf] * Math.log(quotient, 2)
   end
 
-  def self.get_variable_values term, nodes, range_block
-    @nodes = nodes
-    args = {  :N => range_blocks_document,
-              :n => range_blocks_corpus(term),
+  def self.get_variable_values term, range_block
+    args = {  :N => range_blocks_in_document(range_block),
+              :n => range_blocks_with_term(term, range_block),
               :tl => term.length,
               :tf => term_frequency(term, range_block)}
   end
 
-  def self.range_blocks_document
-    @nodes.length
+  def self.range_blocks_in_document range_block
+    @nodes.count { |node| node.depth == range_block.depth }
   end
 
-  def self.range_blocks_corpus term
+  def self.range_blocks_with_term term, range_block
+
     range_blocks_with_term = 0
-    @nodes.each do |range_block|
-      range_blocks_with_term += 1 if term_in_range_block? term, range_block
+    @nodes.each do |node|
+      if term_in_range_block?(term, node) && node.depth == range_block.depth
+        range_blocks_with_term += 1
+      end
     end
     range_blocks_with_term
   end
