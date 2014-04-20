@@ -11,5 +11,5 @@ Parser.count_each
 # p Algorithm.calculate_tfid "the", nodes[4], nodes
 # p Algorithm.range_block_sentence_score(nodes[1], nodes).round(2)
 
-sum = Summary.new(test_doc1, 50)
+sum = Summary.new(test_doc1, 0.5 )
 sum.get_document_summary

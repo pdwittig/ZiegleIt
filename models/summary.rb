@@ -11,10 +11,15 @@ class Summary
 
   def get_document_summary
     @nodes = Parser.parse @document
+    @quota = (@nodes.count { |node| node.leaf? } * @comp_ratio ).to_i
     set_all_rbss
     print_all_rbss
     set_fractal_values
     print_all_fractal_values
+    set_quota_values
+    print_all_quota_values
+    print_sum_fv
+    print_sum_quota
   end
 
   private
@@ -49,9 +54,31 @@ class Summary
     end
   end
 
-  def sum_children_rbss node
-    sum_rbss = 0
-    node.children.each { |child| sum_rbss += child.rbss }
+  def sum_children_rbss node, sum_rbss = 0
+    @nodes.each { |child| sum_rbss += child.rbss if child.depth == node.depth }
     sum_rbss
   end
+
+  def set_quota_values
+    @nodes.each { |node| node.quota = ( @quota * node.fv ).round if node.fv != 0 }
+  end
+
+  def print_all_quota_values
+    @nodes.each do |node|
+      puts "Node depth: #{node.depth}, Node Quota: #{node.quota}"
+    end
+  end
+
+  def print_sum_fv
+    sum_fv = 0
+    @nodes.each { |node| sum_fv += node.fv }
+    puts "Sum of all FVs: #{sum_fv}"
+  end
+
+  def print_sum_quota
+    sum_quota = 0
+    @nodes.each { |node| sum_quota += node.quota }
+    puts "Sum of all Quotas: #{sum_quota}"
+  end
+
 end
