@@ -20,6 +20,7 @@ class Summary
     print_all_quota_values
     print_sum_fv
     print_sum_quota
+    gen_summary find_contributing_nodes
   end
 
   private
@@ -81,4 +82,33 @@ class Summary
     puts "Sum of all Quotas: #{sum_quota}"
   end
 
+  def find_contributing_nodes
+    important_nodes = []
+
+    @nodes.each do |node|
+      if (node.parent != nil)
+        if node.parent.quota > @threshold && node.quota < threshold
+          important_nodes << node
+        end
+      end
+    end
+
+    important_nodes
+  end
+
+  def gen_summary important_nodes
+    summary = []
+    important_nodes.each { |node| summary << return_top_sentences(node).first(quota)}
+    summary
+  end
+
+  def return_top_sentences node
+    #get all sentences from node
+    #calculate FSS for each sentence
+    #store these values in a has like: { content: sentence_content, fss: fss}
+    #sort sentences into an array with highest fss first
+
+    sentences = []
+    
+  end
 end
