@@ -1,11 +1,14 @@
 class TreeNode
 	attr_reader :content, :depth
-	attr_accessor :parent, :children
+	attr_accessor :parent, :children, :rbss, :quote, :fv
 
 	def initialize(args)
 		@content = args[:content] ||= ""
 		@children = args[:children] ||= []
 		@depth = args[:depth] ||= 0
+		@rbss = 0
+		@quota = 0
+		@fv = 0
 	end
 
 	def << child

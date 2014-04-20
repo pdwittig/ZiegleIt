@@ -10,10 +10,8 @@ require_relative '../config/application'
 module Algorithm
   def self.range_block_sentence_score range_block, nodes
     @nodes, @range_block, rbss = nodes, range_block, 0
-
     sentences = range_block_sentences range_block
     sentences.each { |sentence| rbss += fractal_sentence_score(sentence) }
-
     rbss
   end
 
