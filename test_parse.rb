@@ -5,4 +5,7 @@ test_doc2 = 'test_files/wiki_physics.html'
 test_doc3 = 'test_files/wiki_arc_pair_grammar.html'
 test_doc4 = 'test_files/wiki_carnivore.html'
 
-Parser.parse test_doc3
+nodes = Parser.parse test_doc3
+
+Parser.count_each
+p Algorithm.get_variable_values "syntactic", nodes

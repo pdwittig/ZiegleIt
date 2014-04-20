@@ -4,6 +4,7 @@ require 'nokogiri'
 require_relative '../models/tree'
 require_relative '../models/treenode'
 require_relative '../modules/parser'
+require_relative '../modules/algorithm'
 
 APP_ROOT = Pathname.new(File.expand_path(File.join(File.dirname(__FILE__), '..')))
 
