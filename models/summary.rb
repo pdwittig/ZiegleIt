@@ -20,7 +20,7 @@ class Summary
     print_all_quota_values
     print_sum_fv
     print_sum_quota
-    gen_summary find_contributing_nodes
+    p gen_summary find_contributing_nodes
   end
 
   private
@@ -87,8 +87,10 @@ class Summary
 
     @nodes.each do |node|
       if (node.parent != nil)
-        if node.parent.quota > @threshold && node.quota < threshold
+        if ( node.parent.quota > @threshold ) && ( node.quota < @threshold ) && ( node.quota > 0 )
           important_nodes << node
+        else
+          important_nodes << node.parent
         end
       end
     end
@@ -98,17 +100,21 @@ class Summary
 
   def gen_summary important_nodes
     summary = []
-    important_nodes.each { |node| summary << return_top_sentences(node).first(quota)}
+    important_nodes.each { |node| summary << return_top_sentences(node).first(node.quota)}
     summary
   end
 
   def return_top_sentences node
-    #get all sentences from node
-    #calculate FSS for each sentence
-    #store these values in a has like: { content: sentence_content, fss: fss}
-    #sort sentences into an array with highest fss first
+    ##note##get all sentences from node##note##
+    ##note##calculate FSS for each sentence##note##
+    ##note##store these values in a has like: { content: sentence_content, fss: fss}##note##
+    ##note##sort sentences into an array with highest fss first##note##
 
-    sentences = []
-    
+    all_sentence_nodes = Algorithm.range_block_sentences node
+    all_sentence_nodes.map! do |sentence|
+      { content: sentence.content, fss: Algorithm.fractal_sentence_score(sentence) }
+    end
+    all_sentence_nodes.sort_by! { |sentence| sentence[:fss] }
+    top_sentences = all_sentence_nodes.map { |sentence| sentence[:content]}
   end
 end
