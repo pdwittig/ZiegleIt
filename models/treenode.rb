@@ -19,4 +19,9 @@ class TreeNode
 	def leaf?
 		children.length == 0
 	end
+
+	def to_s
+		str = "  " * @depth
+		str << "Depth: #{depth}, Number of children: #{@children.length}, RBSS: #{@rbss}, FV: #{@fv}, Quota: #{@quota}"
+	end
 end

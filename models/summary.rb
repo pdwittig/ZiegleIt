@@ -11,19 +11,35 @@ class Summary
 
   def get_document_summary
     @nodes = Parser.parse @document
-    @quota = (@nodes.count { |node| node.leaf? } * @comp_ratio ).to_i
-    set_all_rbss
-    print_all_rbss
-    set_fractal_values
-    print_all_fractal_values
-    set_quota_values
-    print_all_quota_values
-    print_sum_fv
-    print_sum_quota
-    p gen_summary find_contributing_nodes
+    @quota = (@nodes.count { |node| node.leaf? } * @comp_ratio).to_i
+    set_and_print_rbss_fv_quota
+    gen_summary find_contributing_nodes
+    print_all_nodes
+    print_summary
   end
 
   private
+
+  def print_summary
+    @summary.map! { |sentence| sentence.flatten.join(" ") }
+    sum = @summary.join(". ") + "."
+    puts sum
+  end
+
+  def set_and_print_rbss_fv_quota
+    set_all_rbss
+    # print_all_rbss
+    set_fractal_values
+    # print_all_fractal_values
+    set_quota_values
+    # print_all_quota_values
+    print_sum_fv
+    print_sum_quota
+  end
+
+  def print_all_nodes
+    @nodes.each { |node| puts node }
+  end
 
   def set_all_rbss
     @nodes.each do |node|
@@ -49,19 +65,19 @@ class Summary
     @nodes.each do |node|
       if node.depth == 1
         node.fv = 1
-      elsif ( node.rbss > 0 ) && ( node.depth < 5 )
-        node.fv = node.parent.fv * @decay_rate * ( node.rbss / sum_children_rbss(node) )
+      elsif (node.rbss > 0) && (node.depth < 6)
+        node.fv = node.parent.fv * @decay_rate * (node.rbss / sum_sibling_rbss(node))
       end
     end
   end
 
-  def sum_children_rbss node, sum_rbss = 0
-    @nodes.each { |child| sum_rbss += child.rbss if child.depth == node.depth }
+  def sum_sibling_rbss node, sum_rbss = 0
+    @nodes.each { |sibling| sum_rbss += sibling.rbss if sibling.depth == node.depth }
     sum_rbss
   end
 
   def set_quota_values
-    @nodes.each { |node| node.quota = ( @quota * node.fv ).round if node.fv != 0 }
+    @nodes.each { |node| node.quota = (@quota * node.fv).round if node.fv != 0 }
   end
 
   def print_all_quota_values
@@ -83,38 +99,41 @@ class Summary
   end
 
   def find_contributing_nodes
-    important_nodes = []
-
+    @important_nodes = []
     @nodes.each do |node|
-      if (node.parent != nil)
-        if ( node.parent.quota > @threshold ) && ( node.quota < @threshold ) && ( node.quota > 0 )
-          important_nodes << node
-        else
-          important_nodes << node.parent
-        end
+      if (node.parent != nil) && (node.parent.quota > @threshold) && (node.quota < @threshold) && (node.quota > 0)
+          @important_nodes << node
+      elsif (node.parent != nil) && (node.quota == 0)
+          @important_nodes << node.parent
       end
     end
-
-    important_nodes
+    @important_nodes.uniq!
+    # p "Number of important_nodes: #{@important_nodes.length}"
+    # p "Number of important sentences: #{num_important_sentences}"
+    # @important_nodes.each { |node| puts node }
+    @important_nodes
   end
 
+  # def num_important_sentences
+  #   num = 0
+  #   @important_nodes.each { |node| num += node.quota }
+  #   num
+  # end
+
   def gen_summary important_nodes
-    summary = []
-    important_nodes.each { |node| summary << return_top_sentences(node).first(node.quota)}
-    summary
+    @summary = []
+    important_nodes.each { |node| @summary << return_top_sentences(node).first(node.quota) }
+    @summary.reject(&:empty?)
+    p "Sentences in @summary: #{@summary.length}"
+    @summary
   end
 
   def return_top_sentences node
-    ##note##get all sentences from node##note##
-    ##note##calculate FSS for each sentence##note##
-    ##note##store these values in a has like: { content: sentence_content, fss: fss}##note##
-    ##note##sort sentences into an array with highest fss first##note##
-
     all_sentence_nodes = Algorithm.range_block_sentences node
     all_sentence_nodes.map! do |sentence|
       { content: sentence.content, fss: Algorithm.fractal_sentence_score(sentence) }
     end
     all_sentence_nodes.sort_by! { |sentence| sentence[:fss] }
-    top_sentences = all_sentence_nodes.map { |sentence| sentence[:content]}
+    all_sentence_nodes.map { |sentence| sentence[:content] }
   end
 end
