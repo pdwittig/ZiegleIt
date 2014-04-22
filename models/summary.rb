@@ -13,7 +13,8 @@ class Summary
     @nodes = Parser.parse @document
     @quota = (@nodes.count { |node| node.leaf? } * @comp_ratio).to_i
     set_and_print_rbss_fv_quota
-    gen_summary find_contributing_nodes
+    find_contributing_nodes
+    gen_summary
     print_all_nodes
     print_summary
   end
@@ -120,11 +121,14 @@ class Summary
   #   num
   # end
 
-  def gen_summary important_nodes
+  def gen_summary
     @summary = []
-    important_nodes.each { |node| @summary << return_top_sentences(node).first(node.quota) }
-    @summary.reject(&:empty?)
-    p "Sentences in @summary: #{@summary.length}"
+    @important_nodes.each { |node| @summary << return_top_sentences(node).first(node.quota) }
+    p "Summary before, length: #{@summary.length}"
+    p @summary
+    @summary.reject! { |sentence| sentence.length < 1}
+    p "Summary after, length: #{@summary.length}"
+    p @summary
     @summary
   end
 

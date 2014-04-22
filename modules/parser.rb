@@ -1,14 +1,12 @@
 require_relative '../config/application.rb'
 
-# Module takes a file input and by calling Module.parse with a file
-# input, the module creates node objects based on the content of the
-# file
 module Parser
   def self.parse file
     @file = file
     create_reader
     read_nodes
-    reduce_paragraphs_into_sentences
+    print_all_nodes
+    print_all_sentences
     @nodes
   end
 
@@ -20,11 +18,19 @@ module Parser
     puts "Paragraphs: #{@nodes.select { |node| node.depth == 5 }.length}"
     puts "Sentences: #{@nodes.select { |node| node.depth == 6 }.length}"
     word_count = 0
-    @nodes.select { |node| node.depth == 6 }.each { |sentence| word_count += sentence.content.length }
+    @nodes.select { |node| node.depth == 6 }.each { |sentence| word_count += sentence.words.length }
     puts "Words: #{word_count}"
   end
 
   private
+
+  def self.print_all_nodes
+    @nodes.each { |node| puts node }
+  end
+
+  def self.print_all_sentences
+    @nodes.each { |node| p node.content if node.depth == 6}
+  end
 
   def self.create_reader
     @reader = Nokogiri::XML::Reader(File.open(@file))
@@ -39,6 +45,10 @@ module Parser
         node.name == 'h2'
 
         create_node create_args node
+        if @nodes.length != 0 && (@nodes.last.depth == 5)
+          @nodes.last.content.gsub!(/\[\d+\]/, "")
+          create_and_add_sentence_nodes break_into_sentences(@nodes.last), @nodes.last
+        end
       end
     end
   end
@@ -59,38 +69,39 @@ module Parser
     when node.name =~ /(h).{1}/
       { depth: node.name.delete('h').to_i,
         content: "#{node.inner_xml.match(/[ \w]+(?=<\/span>)/)}" }
-    when node.name == 'p'
-      { depth: 5,
-        content: (Nokogiri::XML.fragment(node.inner_xml).content) }
-    end
-  end
+      when node.name == 'p'
+        { depth: 5,
+          content: (Nokogiri::XML.fragment(node.inner_xml).content) }
+        end
+      end
 
-  def self.print_wait
-    @nodes.each do |node|
-      p node
-      puts "\n"
-    end
-  end
+      def self.print_wait
+        @nodes.each do |node|
+          p node
+          puts "\n"
+        end
+      end
 
   ##note##How can we pass the node into this block without an argument?##note##
   def self.break_into_sentences node
     sentence_regex = /((?<=[a-z0-9)][.?!])|(?<=[a-z0-9][.?!]"))\s+(?="?[A-Z])/
-    node.content.split(sentence_regex).reject { |sentence| sentence == '' }
-  end
+node.content.split(sentence_regex).reject { |sentence| sentence == '' }
+end
 
-  def self.reduce_paragraphs_into_sentences
-    @nodes.select { |node| node.depth == 5 }.each do |node|
-      create_and_add_sentence_nodes break_into_sentences(node), node
-    end
+def self.reduce_paragraphs_into_sentences
+  @nodes.select { |node| node.depth == 5 }.each do |node|
+    create_and_add_sentence_nodes break_into_sentences(node), node
   end
+end
 
   ##note##After we create the sentences, there isn't much use for the content in each paragraph?##note##
   ##note##Refactor: remove arguments? Or at least one?##note##
   ##note##Should be split into at least two methods ##note##
   def self.create_and_add_sentence_nodes sentences, node
-    word_regex = /[^\w]/
+    split_regex = /([^\w])/
     sentences.map! do |sentence|
-      args = { content: sentence.split(word_regex).reject { |word| word == '' }, depth: 6 }
+      args = { content: sentence, words: sentence.split(split_regex).reject { |word| word !~ /\w+/ }, depth: 6 }
+      p args[:words]
       TreeNode.new(args)
     end
 
