@@ -110,17 +110,18 @@ class Summary
 
   def gen_summary
     @summary = []
-    @important_nodes.each { |node| @summary += return_top_sentences(node).first(node.quota) }
+    @important_nodes.each { |node| @summary += return_top_sentences(node) }
     @summary.reject!(&:empty?)
     p "Sentences in @summary: #{@summary.length}"
   end
 
   def return_top_sentences node
     all_sentence_nodes = Algorithm.range_block_sentences node
-    all_sentence_nodes.map! do |sentence|
-      { content: sentence.content, fss: Algorithm.fractal_sentence_score(sentence) }
+    all_sentence_nodes.map!.with_index do |sentence, index|
+      { content: sentence.content, fss: Algorithm.fractal_sentence_score(sentence), index: index}
     end
-    all_sentence_nodes.sort_by! { |sentence| sentence[:fss] }
+    all_sentence_nodes = all_sentence_nodes.sort_by! { |sentence| sentence[:fss] }.first(node.quota)
+    all_sentence_nodes.sort_by! { |sentence| sentence[:index] }
     all_sentence_nodes.map { |sentence| sentence[:content] }
   end
 end
