@@ -9,18 +9,19 @@ module Parser
     create_reader
     read_nodes
     reduce_paragraphs_into_sentences
-    # print_wait
-    # p @nodes.length
-    # count_each
     @nodes
   end
 
   def self.count_each
-    puts "h1: #{@nodes.select { |node| node.depth == 1 }.length}"
-    puts "h2: #{@nodes.select { |node| node.depth == 2 }.length}"
-    puts "h3: #{@nodes.select { |node| node.depth == 3 }.length}"
-    puts "h4: #{@nodes.select { |node| node.depth == 4 }.length}"
-    puts "p: #{@nodes.select { |node| node.depth == 5 }.length}"
+    puts "Title: #{@nodes.select { |node| node.depth == 1 }.length}"
+    puts "Chapters: #{@nodes.select { |node| node.depth == 2 }.length}"
+    puts "Sections: #{@nodes.select { |node| node.depth == 3 }.length}"
+    puts "Sub-sections: #{@nodes.select { |node| node.depth == 4 }.length}"
+    puts "Paragraphs: #{@nodes.select { |node| node.depth == 5 }.length}"
+    puts "Sentences: #{@nodes.select { |node| node.depth == 6 }.length}"
+    word_count = 0
+    @nodes.select { |node| node.depth == 6 }.each { |sentence| word_count += sentence.content.length }
+    puts "Words: #{word_count}"
   end
 
   private
