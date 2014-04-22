@@ -5,8 +5,6 @@ module Parser
     @file = file
     create_reader
     read_nodes
-    print_all_nodes
-    print_all_sentences
     @nodes
   end
 
@@ -101,7 +99,6 @@ end
     split_regex = /([^\w])/
     sentences.map! do |sentence|
       args = { content: sentence, words: sentence.split(split_regex).reject { |word| word !~ /\w+/ }, depth: 6 }
-      p args[:words]
       TreeNode.new(args)
     end
 

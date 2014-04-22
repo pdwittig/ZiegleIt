@@ -76,7 +76,7 @@ module Algorithm
     words = []
 
     if range_block.depth == 6
-      return range_block.content if range_block.depth == 6
+      return range_block.words if range_block.depth == 6
     else
       range_block.children.each { |child| words << (all_words_in_range_block child) }
     end

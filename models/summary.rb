@@ -7,6 +7,7 @@ class Summary
     @threshold = threshold
     @decay_rate = 1
     @fractal_dimension = 1
+    @important_nodes = []
   end
 
   def get_document_summary
@@ -22,9 +23,7 @@ class Summary
   private
 
   def print_summary
-    @summary.map! { |sentence| sentence.flatten.join(" ") }
-    sum = @summary.join(". ") + "."
-    puts sum
+    puts @summary.join(" ")
   end
 
   def set_and_print_rbss_fv_quota
@@ -99,30 +98,21 @@ class Summary
     puts "Sum of all Quotas: #{sum_quota}"
   end
 
-  def find_contributing_nodes(node = @nodes.first, important_nodes = [])
+  def find_contributing_nodes(node = @nodes.first)
     if node.quota < @threshold
-      important_nodes << node
+      @important_nodes << node
     elsif node.children.select { |child| child.quota > 0 }.length > 0
-      important_nodes << node      
+      @important_nodes << node      
     else
-      node.children.each { |child| find_contributing_nodes(child, important_nodes) }
+      node.children.each { |child| find_contributing_nodes(child) }
     end
-    important_nodes
   end
-
-  # def num_important_sentences
-  #   num = 0
-  #   @important_nodes.each { |node| num += node.quota }
-  #   num
-  # end
 
   def gen_summary
     @summary = []
     @important_nodes.each { |node| @summary += return_top_sentences(node).first(node.quota) }
     @summary.reject!(&:empty?)
-    @summary.map { |sentance| sentance.join(' ') }
     p "Sentences in @summary: #{@summary.length}"
-    @summary
   end
 
   def return_top_sentences node
@@ -132,6 +122,5 @@ class Summary
     end
     all_sentence_nodes.sort_by! { |sentence| sentence[:fss] }
     all_sentence_nodes.map { |sentence| sentence[:content] }
-
   end
 end

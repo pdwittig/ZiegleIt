@@ -10,29 +10,20 @@ test_doc4 = 'test_files/wiki_carnivore.html'
 nodes = Parser.parse test_doc1
 Parser.count_each
 
-# # ThWait.all_waits(
+sum = Summary.new(test_doc1, 0.5 )
+bm2 = Benchmark.measure { sum.get_document_summary }
+puts "Summary benchmark 50% compression: #{bm2}"
 
-#   # Thread.new {
-#     sum = Summary.new(test_doc4, 0.5 )
-#     bm2 = Benchmark.measure { sum.get_document_summary }
-#     puts "Summary benchmark 50% compression: #{bm2}"
-#   # },
+sum = Summary.new(test_doc1, 0.1 )
+bm3 = Benchmark.measure { sum.get_document_summary }
+puts "Summary benchmark 10% compression: #{bm3}"
 
-#   # Thread.new { 
-#     sum = Summary.new(test_doc4, 0.1 )
-#     bm3 = Benchmark.measure { sum.get_document_summary }
-#     puts "Summary benchmark 10% compression: #{bm3}"
-#   # },
+sum = Summary.new(test_doc1, 0.05 )
+bm4 = Benchmark.measure { sum.get_document_summary }
+puts "Summary benchmark 5% compression: #{bm4}"
 
-#   # Thread.new {
-#     sum = Summary.new(test_doc4, 0.05 )
-#     bm4 = Benchmark.measure { sum.get_document_summary }
-#     puts "Summary benchmark 5% compression: #{bm4}"
-#   # }
 
-# # )
-
-# puts "-" * 80
-# puts "Summary benchmark 50% compression: #{bm2}"
-# puts "Summary benchmark 50% compression: #{bm3}"
-# puts "Summary benchmark 50% compression: #{bm4}"
+puts "-" * 80
+puts "Summary benchmark 50% compression: #{bm2}"
+puts "Summary benchmark 50% compression: #{bm3}"
+puts "Summary benchmark 50% compression: #{bm4}"
