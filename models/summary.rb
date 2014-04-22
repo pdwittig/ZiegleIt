@@ -98,20 +98,15 @@ class Summary
     puts "Sum of all Quotas: #{sum_quota}"
   end
 
-  def find_contributing_nodes
-    @important_nodes = []
-    @nodes.each do |node|
-      if (node.parent != nil) && (node.parent.quota > @threshold) && (node.quota < @threshold) && (node.quota > 0)
-          @important_nodes << node
-      elsif (node.parent != nil) && (node.quota == 0)
-          @important_nodes << node.parent
-      end
+  def find_contributing_nodes(node = @nodes.first, important_nodes = [])
+    if node.quota < @threshold
+      important_nodes << node
+    elsif node.children.select { |child| child.quota > 0 }.length > 0
+      important_nodes << node      
+    else
+      node.children.each { |child| find_contributing_nodes(child, important_nodes) }
     end
-    @important_nodes.uniq!
-    # p "Number of important_nodes: #{@important_nodes.length}"
-    # p "Number of important sentences: #{num_important_sentences}"
-    # @important_nodes.each { |node| puts node }
-    @important_nodes
+    important_nodes
   end
 
   # def num_important_sentences
@@ -122,8 +117,9 @@ class Summary
 
   def gen_summary important_nodes
     @summary = []
-    important_nodes.each { |node| @summary << return_top_sentences(node).first(node.quota) }
-    @summary.reject(&:empty?)
+    important_nodes.each { |node| @summary += return_top_sentences(node).first(node.quota) }
+    @summary.reject!(&:empty?)
+    @summary.map { |sentance| sentance.join(' ') }
     p "Sentences in @summary: #{@summary.length}"
     @summary
   end
@@ -135,5 +131,6 @@ class Summary
     end
     all_sentence_nodes.sort_by! { |sentence| sentence[:fss] }
     all_sentence_nodes.map { |sentence| sentence[:content] }
+
   end
 end
