@@ -30,7 +30,7 @@ module Algorithm
 
   def self.fractal_sentence_score sentence
     fss = 0
-    sentence.content.each { |term| fss += calculate_tfid term }
+    sentence.words.each { |term| fss += calculate_tfid term }
     fss
   end
 
